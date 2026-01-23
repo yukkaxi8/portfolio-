@@ -1,0 +1,917 @@
+<!doctype html>
+<html lang="id">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galeri Seni Lukis Premium - Filosofi dalam Setiap Goresan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        .parallax-bg {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .art-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .art-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .dark-mode {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        
+        .dark-mode .bg-white {
+            background-color: #2d2d2d !important;
+        }
+        
+        .dark-mode .text-gray-800 {
+            color: #ffffff !important;
+        }
+        
+        .dark-mode .text-gray-600 {
+            color: #cccccc !important;
+        }
+        
+        .chatbot {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .counter {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #d4af37;
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="font-sans"><!-- Header / Navbar -->
+  <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm shadow-lg z-50 transition-all duration-300">
+   <div class="container mx-auto px-6 py-4">
+    <div class="flex justify-between items-center">
+     <div class="text-2xl font-bold text-gray-800" id="gallery-title">
+      Galeri Seni Lukis Premium
+     </div>
+     <div class="hidden md:flex space-x-8"><a href="#home" class="text-gray-600 hover:text-gray-800 transition-colors">Beranda</a> <a href="#gallery" class="text-gray-600 hover:text-gray-800 transition-colors">Galeri</a> <a href="#philosophy" class="text-gray-600 hover:text-gray-800 transition-colors">Filosofi</a> <a href="#artists" class="text-gray-600 hover:text-gray-800 transition-colors">Seniman</a> <a href="#events" class="text-gray-600 hover:text-gray-800 transition-colors">Pameran</a> <a href="#contact" class="text-gray-600 hover:text-gray-800 transition-colors">Kontak</a>
+     </div>
+     <div class="flex items-center space-x-4"><!-- Language Switcher --> <select id="language-switcher" class="bg-transparent border border-gray-300 rounded px-2 py-1"> <option value="id">ID</option> <option value="en">EN</option> </select> <!-- Dark Mode Toggle --> <button id="dark-mode-toggle" class="p-2 rounded-full hover:bg-gray-100 transition-colors"> <i class="fas fa-moon"></i> </button> <!-- Mobile Menu --> <button id="mobile-menu" class="md:hidden p-2"> <i class="fas fa-bars"></i> </button>
+     </div>
+    </div>
+   </div>
+  </nav><!-- Hero Section -->
+  <section id="home" class="relative h-screen parallax-bg" style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 800%22><rect fill=%22%23f4f4f4%22 width=%221200%22 height=%22800%22/><path fill=%22%23d4af37%22 d=%22M0 400L50 420C100 440 200 480 300 500C400 520 500 520 600 500C700 480 800 440 900 420C1000 400 1100 400 1150 400L1200 400V800H1150C1100 800 1000 800 900 800C800 800 700 800 600 800C500 800 400 800 300 800C200 800 100 800 50 800H0V400Z%22/></svg>')">
+   <div class="absolute inset-0 flex items-center justify-center text-center text-white">
+    <div class="max-w-4xl px-6">
+     <h1 class="text-5xl md:text-7xl font-bold mb-6 fade-in">Filosofi dalam Setiap Goresan</h1>
+     <p class="text-xl md:text-2xl mb-8 fade-in" id="hero-subtitle">Jelajahi keindahan seni lukis yang menggugah jiwa dan menyentuh hati</p>
+     <div class="space-x-4 fade-in"><button class="bg-yellow-600 hover:bg-yellow-700 text-white px-8 py-3 rounded-full transition-colors"> Jelajahi Galeri </button> <button id="virtual-tour-btn" class="border-2 border-white text-white hover:bg-white hover:text-gray-800 px-8 py-3 rounded-full transition-colors"> Tur Virtual 360° </button>
+     </div>
+    </div>
+   </div>
+  </section><!-- Search Bar -->
+  <section class="py-8 bg-gray-50">
+   <div class="container mx-auto px-6">
+    <div class="max-w-2xl mx-auto">
+     <div class="relative"><input type="text" id="search-input" placeholder="Cari lukisan, seniman, atau gaya..." class="w-full px-6 py-4 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"> <button class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500"> <i class="fas fa-search"></i> </button>
+     </div>
+    </div>
+   </div>
+  </section><!-- Statistics Counter -->
+  <section class="py-16 bg-yellow-600 text-white">
+   <div class="container mx-auto px-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+     <div class="fade-in">
+      <div class="counter" data-target="150">
+       0
+      </div>
+      <p class="text-lg">Karya Seni</p>
+     </div>
+     <div class="fade-in">
+      <div class="counter" data-target="25">
+       0
+      </div>
+      <p class="text-lg">Seniman</p>
+     </div>
+     <div class="fade-in">
+      <div class="counter" data-target="50">
+       0
+      </div>
+      <p class="text-lg">Pameran</p>
+     </div>
+     <div class="fade-in">
+      <div class="counter" data-target="1000">
+       0
+      </div>
+      <p class="text-lg">Pengunjung</p>
+     </div>
+    </div>
+   </div>
+  </section><!-- Gallery Section -->
+  <section id="gallery" class="py-20 bg-white">
+   <div class="container mx-auto px-6">
+    <div class="text-center mb-16 fade-in">
+     <h2 class="text-4xl font-bold text-gray-800 mb-4">Koleksi Masterpiece</h2>
+     <p class="text-xl text-gray-600">Setiap lukisan memiliki cerita dan filosofi yang mendalam</p>
+    </div><!-- Filter Categories -->
+    <div class="flex flex-wrap justify-center mb-12 space-x-4"><button class="filter-btn active bg-yellow-600 text-white px-6 py-2 rounded-full mb-2" data-filter="all">Semua</button> <button class="filter-btn bg-gray-200 text-gray-700 px-6 py-2 rounded-full mb-2 hover:bg-yellow-600 hover:text-white" data-filter="klasik">Klasik</button> <button class="filter-btn bg-gray-200 text-gray-700 px-6 py-2 rounded-full mb-2 hover:bg-yellow-600 hover:text-white" data-filter="modern">Modern</button> <button class="filter-btn bg-gray-200 text-gray-700 px-6 py-2 rounded-full mb-2 hover:bg-yellow-600 hover:text-white" data-filter="abstrak">Abstrak</button> <button class="filter-btn bg-gray-200 text-gray-700 px-6 py-2 rounded-full mb-2 hover:bg-yellow-600 hover:text-white" data-filter="realis">Realis</button>
+    </div><!-- Gallery Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="gallery-grid"><!-- Art pieces will be dynamically loaded here -->
+    </div>
+   </div>
+  </section><!-- Philosophy Section -->
+  <section id="philosophy" class="py-20 bg-gray-50">
+   <div class="container mx-auto px-6">
+    <div class="max-w-4xl mx-auto text-center fade-in">
+     <h2 class="text-4xl font-bold text-gray-800 mb-8">Filosofi Seni Lukis</h2>
+     <p class="text-lg text-gray-600 mb-12">Seni lukis bukan hanya tentang keindahan visual, tetapi juga tentang ekspresi jiwa, pemikiran, dan perasaan yang dituangkan dalam setiap goresan kuas.</p>
+     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+      <div class="bg-white p-8 rounded-lg shadow-lg fade-in">
+       <div class="text-4xl text-yellow-600 mb-4">
+        🎨
+       </div>
+       <h3 class="text-xl font-bold mb-4">Ekspresi Jiwa</h3>
+       <p class="text-gray-600">Setiap goresan kuas adalah manifestasi dari perasaan terdalam seniman</p>
+      </div>
+      <div class="bg-white p-8 rounded-lg shadow-lg fade-in">
+       <div class="text-4xl text-yellow-600 mb-4">
+        🌟
+       </div>
+       <h3 class="text-xl font-bold mb-4">Keindahan Abadi</h3>
+       <p class="text-gray-600">Karya seni yang baik akan tetap indah dan relevan sepanjang masa</p>
+      </div>
+      <div class="bg-white p-8 rounded-lg shadow-lg fade-in">
+       <div class="text-4xl text-yellow-600 mb-4">
+        💭
+       </div>
+       <h3 class="text-xl font-bold mb-4">Pesan Mendalam</h3>
+       <p class="text-gray-600">Di balik setiap lukisan tersimpan pesan dan makna yang menginspirasi</p>
+      </div>
+     </div>
+    </div>
+   </div>
+  </section><!-- Artists Section -->
+  <section id="artists" class="py-20 bg-white">
+   <div class="container mx-auto px-6">
+    <div class="text-center mb-16 fade-in">
+     <h2 class="text-4xl font-bold text-gray-800 mb-4">Seniman Terkemuka</h2>
+     <p class="text-xl text-gray-600">Berkenalan dengan para maestro di balik karya-karya menakjubkan</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="artists-grid"><!-- Artists will be dynamically loaded here -->
+    </div>
+   </div>
+  </section><!-- Events Section -->
+  <section id="events" class="py-20 bg-gray-50">
+   <div class="container mx-auto px-6">
+    <div class="text-center mb-16 fade-in">
+     <h2 class="text-4xl font-bold text-gray-800 mb-4">Pameran &amp; Acara</h2>
+     <p class="text-xl text-gray-600">Jangan lewatkan pameran dan workshop seni terbaru</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="events-grid"><!-- Events will be dynamically loaded here -->
+    </div>
+   </div>
+  </section><!-- Testimonials Carousel -->
+  <section class="py-20 bg-yellow-600 text-white">
+   <div class="container mx-auto px-6">
+    <div class="text-center mb-16">
+     <h2 class="text-4xl font-bold mb-4">Testimoni Pengunjung</h2>
+     <p class="text-xl opacity-90">Apa kata mereka tentang pengalaman di galeri kami</p>
+    </div>
+    <div class="max-w-4xl mx-auto">
+     <div id="testimonials-carousel" class="text-center"><!-- Testimonials will be dynamically loaded here -->
+     </div>
+    </div>
+   </div>
+  </section><!-- Contact Form -->
+  <section id="contact" class="py-20 bg-white">
+   <div class="container mx-auto px-6">
+    <div class="max-w-4xl mx-auto">
+     <div class="text-center mb-16 fade-in">
+      <h2 class="text-4xl font-bold text-gray-800 mb-4" id="contact-title">Hubungi Kami</h2>
+      <p class="text-xl text-gray-600">Ada pertanyaan atau ingin berkunjung? Kami siap membantu</p>
+     </div>
+     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12"><!-- Contact Form -->
+      <div class="fade-in">
+       <form id="contact-form" class="space-y-6">
+        <div><label for="name" class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label> <input type="text" id="name" name="name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
+        </div>
+        <div><label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label> <input type="email" id="email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
+        </div>
+        <div><label for="message" class="block text-sm font-medium text-gray-700 mb-2">Pesan</label> <textarea id="message" name="message" rows="5" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"></textarea>
+        </div>
+        <div><label for="rating" class="block text-sm font-medium text-gray-700 mb-2">Rating (1-5)</label> <select id="rating" name="rating" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"> <option value="">Pilih Rating</option> <option value="5">⭐⭐⭐⭐⭐ Sangat Baik</option> <option value="4">⭐⭐⭐⭐ Baik</option> <option value="3">⭐⭐⭐ Cukup</option> <option value="2">⭐⭐ Kurang</option> <option value="1">⭐ Sangat Kurang</option> </select>
+        </div><button type="submit" id="submit-btn" class="w-full bg-yellow-600 hover:bg-yellow-700 text-white py-3 rounded-lg transition-colors"> Kirim Pesan </button>
+       </form>
+      </div><!-- Contact Info & Map -->
+      <div class="fade-in">
+       <div class="bg-gray-50 p-8 rounded-lg mb-8">
+        <h3 class="text-xl font-bold mb-4">Informasi Kontak</h3>
+        <div class="space-y-4">
+         <div class="flex items-center"><i class="fas fa-map-marker-alt text-yellow-600 w-6"></i> <span class="ml-3">Jl. Seni Raya No. 123, Jakarta</span>
+         </div>
+         <div class="flex items-center"><i class="fas fa-phone text-yellow-600 w-6"></i> <span class="ml-3">+62 21 1234 5678</span>
+         </div>
+         <div class="flex items-center"><i class="fas fa-envelope text-yellow-600 w-6"></i> <span class="ml-3">info@galeriseni.com</span>
+         </div>
+         <div class="flex items-center"><i class="fas fa-clock text-yellow-600 w-6"></i> <span class="ml-3">Senin - Minggu: 09:00 - 18:00</span>
+         </div>
+        </div>
+       </div><!-- Map Integration -->
+       <div class="bg-gray-200 h-64 rounded-lg flex items-center justify-center">
+        <div class="text-center text-gray-600"><i class="fas fa-map text-4xl mb-4"></i>
+         <p>Peta Lokasi Galeri</p>
+         <p class="text-sm">Klik untuk membuka di Google Maps</p>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </section><!-- Footer -->
+  <footer class="bg-gray-800 text-white py-16">
+   <div class="container mx-auto px-6">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+     <div>
+      <h3 class="text-xl font-bold mb-4">Galeri Seni Lukis Premium</h3>
+      <p class="text-gray-400 mb-4">Menginspirasi melalui keindahan seni lukis dan filosofi yang mendalam.</p>
+      <div class="flex space-x-4"><a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-facebook"></i></a> <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-instagram"></i></a> <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-twitter"></i></a> <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-youtube"></i></a>
+      </div>
+     </div>
+     <div>
+      <h4 class="text-lg font-semibold mb-4">Navigasi</h4>
+      <ul class="space-y-2 text-gray-400">
+       <li><a href="#home" class="hover:text-white transition-colors">Beranda</a></li>
+       <li><a href="#gallery" class="hover:text-white transition-colors">Galeri</a></li>
+       <li><a href="#philosophy" class="hover:text-white transition-colors">Filosofi</a></li>
+       <li><a href="#artists" class="hover:text-white transition-colors">Seniman</a></li>
+      </ul>
+     </div>
+     <div>
+      <h4 class="text-lg font-semibold mb-4">Layanan</h4>
+      <ul class="space-y-2 text-gray-400">
+       <li><a href="#" class="hover:text-white transition-colors">Tur Virtual</a></li>
+       <li><a href="#" class="hover:text-white transition-colors">Workshop</a></li>
+       <li><a href="#" class="hover:text-white transition-colors">Pameran</a></li>
+       <li><a href="#" class="hover:text-white transition-colors">Konsultasi</a></li>
+      </ul>
+     </div>
+     <div>
+      <h4 class="text-lg font-semibold mb-4">Newsletter</h4>
+      <p class="text-gray-400 mb-4">Dapatkan update terbaru tentang pameran dan acara kami.</p>
+      <div class="flex"><input type="email" placeholder="Email Anda" class="flex-1 px-4 py-2 bg-gray-700 text-white rounded-l-lg focus:outline-none"> <button class="bg-yellow-600 hover:bg-yellow-700 px-4 py-2 rounded-r-lg transition-colors"> <i class="fas fa-paper-plane"></i> </button>
+      </div>
+     </div>
+    </div>
+    <div class="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400">
+     <p>© 2024 Galeri Seni Lukis Premium. Semua hak dilindungi.</p>
+    </div>
+   </div>
+  </footer><!-- Chatbot -->
+  <div class="chatbot"><button id="chatbot-toggle" class="bg-yellow-600 hover:bg-yellow-700 text-white p-4 rounded-full shadow-lg transition-colors"> <i class="fas fa-comments text-xl"></i> </button>
+   <div id="chatbot-window" class="hidden bg-white rounded-lg shadow-xl w-80 h-96 mb-4">
+    <div class="bg-yellow-600 text-white p-4 rounded-t-lg">
+     <h4 class="font-semibold">Panduan Wisata Seni</h4>
+    </div>
+    <div class="p-4 h-64 overflow-y-auto" id="chat-messages">
+     <div class="bg-gray-100 p-3 rounded-lg mb-2">
+      <p class="text-sm">Halo! Saya di sini untuk membantu Anda menjelajahi galeri. Ada yang ingin Anda tanyakan?</p>
+     </div>
+    </div>
+    <div class="p-4 border-t">
+     <div class="flex"><input type="text" id="chat-input" placeholder="Ketik pesan..." class="flex-1 px-3 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"> <button id="chat-send" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-r-lg transition-colors"> <i class="fas fa-paper-plane"></i> </button>
+     </div>
+    </div>
+   </div>
+  </div><!-- Modal for Virtual Tour -->
+  <div id="virtual-tour-modal" class="modal">
+   <div class="bg-white rounded-lg p-8 max-w-2xl mx-4">
+    <div class="flex justify-between items-center mb-6">
+     <h3 class="text-2xl font-bold">Tur Virtual 360°</h3><button id="close-modal" class="text-gray-500 hover:text-gray-700 text-2xl"> <i class="fas fa-times"></i> </button>
+    </div>
+    <div class="bg-gray-200 h-96 rounded-lg flex items-center justify-center mb-6">
+     <div class="text-center text-gray-600"><i class="fas fa-vr-cardboard text-6xl mb-4"></i>
+      <p class="text-xl">Pengalaman Tur Virtual 360°</p>
+      <p>Jelajahi galeri dari berbagai sudut pandang</p>
+     </div>
+    </div>
+    <div class="flex justify-center space-x-4"><button class="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-2 rounded-lg transition-colors"> Mulai Tur </button> <button id="close-tour" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-6 py-2 rounded-lg transition-colors"> Tutup </button>
+    </div>
+   </div>
+  </div>
+  <script>
+        // Configuration object
+        const defaultConfig = {
+            gallery_title: "Galeri Seni Lukis Premium",
+            hero_subtitle: "Jelajahi keindahan seni lukis yang menggugah jiwa dan menyentuh hati",
+            contact_title: "Hubungi Kami",
+            background_color: "#ffffff",
+            surface_color: "#f9fafb",
+            text_color: "#1f2937",
+            primary_action_color: "#d97706",
+            secondary_action_color: "#6b7280",
+            font_family: "Inter",
+            font_size: 16
+        };
+
+        let currentRecordCount = 0;
+        let isDarkMode = false;
+        let currentLanguage = 'id';
+
+        // Sample data
+        const artworks = [
+            { id: 1, title: "Harmoni Alam", artist: "Sari Dewi", category: "klasik", philosophy: "Menggambarkan keseimbangan antara manusia dan alam" },
+            { id: 2, title: "Abstrak Emosi", artist: "Budi Santoso", category: "abstrak", philosophy: "Ekspresi perasaan yang tidak dapat diungkapkan dengan kata" },
+            { id: 3, title: "Potret Kehidupan", artist: "Maya Indira", category: "realis", philosophy: "Cerminan realitas sosial masyarakat urban" },
+            { id: 4, title: "Futuristik Vision", artist: "Andi Pratama", category: "modern", philosophy: "Pandangan tentang masa depan teknologi dan humanitas" },
+            { id: 5, title: "Tradisi Nusantara", artist: "Dewi Sartika", category: "klasik", philosophy: "Pelestarian nilai-nilai budaya tradisional" },
+            { id: 6, title: "Geometri Jiwa", artist: "Rudi Habibie", category: "abstrak", philosophy: "Struktur matematis dalam ekspresi spiritual" }
+        ];
+
+        const artists = [
+            { name: "Sari Dewi", specialty: "Lukisan Alam", experience: "15 tahun", philosophy: "Alam adalah guru terbaik dalam seni" },
+            { name: "Budi Santoso", specialty: "Seni Abstrak", experience: "20 tahun", philosophy: "Emosi tidak memerlukan bentuk untuk dirasakan" },
+            { name: "Maya Indira", specialty: "Potret Realis", experience: "18 tahun", philosophy: "Setiap wajah memiliki cerita yang layak diabadikan" }
+        ];
+
+        const events = [
+            { title: "Pameran Seni Kontemporer", date: "15-30 Januari 2024", description: "Menampilkan karya-karya seniman muda Indonesia" },
+            { title: "Workshop Teknik Melukis", date: "5 Februari 2024", description: "Belajar teknik dasar melukis dengan cat minyak" }
+        ];
+
+        const testimonials = [
+            { name: "Rina Sari", message: "Galeri yang luar biasa! Setiap lukisan memiliki cerita yang menyentuh hati.", rating: 5 },
+            { name: "Ahmad Fauzi", message: "Pengalaman yang menginspirasi. Filosofi di balik setiap karya sangat mendalam.", rating: 5 },
+            { name: "Lisa Permata", message: "Koleksi yang beragam dan berkualitas tinggi. Sangat direkomendasikan!", rating: 4 }
+        ];
+
+        // Data handler for SDK
+        const dataHandler = {
+            onDataChanged(data) {
+                currentRecordCount = data.length;
+                // Update UI with new testimonials if needed
+                if (data.length > 0) {
+                    updateTestimonialsDisplay(data);
+                }
+            }
+        };
+
+        // Initialize Data SDK
+        async function initializeDataSDK() {
+            if (window.dataSdk) {
+                const result = await window.dataSdk.init(dataHandler);
+                if (!result.isOk) {
+                    console.error("Failed to initialize data SDK");
+                }
+            }
+        }
+
+        // Initialize Element SDK
+        async function initializeElementSDK() {
+            if (window.elementSdk) {
+                await window.elementSdk.init({
+                    defaultConfig,
+                    onConfigChange: async (config) => {
+                        // Update gallery title
+                        const titleElement = document.getElementById('gallery-title');
+                        if (titleElement) {
+                            titleElement.textContent = config.gallery_title || defaultConfig.gallery_title;
+                        }
+
+                        // Update hero subtitle
+                        const subtitleElement = document.getElementById('hero-subtitle');
+                        if (subtitleElement) {
+                            subtitleElement.textContent = config.hero_subtitle || defaultConfig.hero_subtitle;
+                        }
+
+                        // Update contact title
+                        const contactTitleElement = document.getElementById('contact-title');
+                        if (contactTitleElement) {
+                            contactTitleElement.textContent = config.contact_title || defaultConfig.contact_title;
+                        }
+
+                        // Apply colors
+                        const backgroundColor = config.background_color || defaultConfig.background_color;
+                        const surfaceColor = config.surface_color || defaultConfig.surface_color;
+                        const textColor = config.text_color || defaultConfig.text_color;
+                        const primaryActionColor = config.primary_action_color || defaultConfig.primary_action_color;
+                        const secondaryActionColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+
+                        document.body.style.backgroundColor = backgroundColor;
+                        document.body.style.color = textColor;
+
+                        // Apply surface color to cards and sections
+                        const surfaceElements = document.querySelectorAll('.bg-gray-50, .bg-white');
+                        surfaceElements.forEach(el => {
+                            el.style.backgroundColor = surfaceColor;
+                        });
+
+                        // Apply primary action color to buttons
+                        const primaryButtons = document.querySelectorAll('.bg-yellow-600');
+                        primaryButtons.forEach(el => {
+                            el.style.backgroundColor = primaryActionColor;
+                        });
+
+                        // Apply font settings
+                        const customFont = config.font_family || defaultConfig.font_family;
+                        const baseSize = config.font_size || defaultConfig.font_size;
+                        const baseFontStack = 'system-ui, -apple-system, sans-serif';
+
+                        document.body.style.fontFamily = `${customFont}, ${baseFontStack}`;
+                        document.body.style.fontSize = `${baseSize}px`;
+
+                        // Scale headings proportionally
+                        const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+                        headings.forEach(heading => {
+                            const tagName = heading.tagName.toLowerCase();
+                            let multiplier = 1;
+                            switch(tagName) {
+                                case 'h1': multiplier = 2.5; break;
+                                case 'h2': multiplier = 2; break;
+                                case 'h3': multiplier = 1.5; break;
+                                case 'h4': multiplier = 1.25; break;
+                                case 'h5': multiplier = 1.125; break;
+                                case 'h6': multiplier = 1; break;
+                            }
+                            heading.style.fontSize = `${baseSize * multiplier}px`;
+                        });
+                    },
+                    mapToCapabilities: (config) => ({
+                        recolorables: [
+                            {
+                                get: () => config.background_color || defaultConfig.background_color,
+                                set: (value) => {
+                                    if (window.elementSdk) {
+                                        window.elementSdk.setConfig({ background_color: value });
+                                    }
+                                }
+                            },
+                            {
+                                get: () => config.surface_color || defaultConfig.surface_color,
+                                set: (value) => {
+                                    if (window.elementSdk) {
+                                        window.elementSdk.setConfig({ surface_color: value });
+                                    }
+                                }
+                            },
+                            {
+                                get: () => config.text_color || defaultConfig.text_color,
+                                set: (value) => {
+                                    if (window.elementSdk) {
+                                        window.elementSdk.setConfig({ text_color: value });
+                                    }
+                                }
+                            },
+                            {
+                                get: () => config.primary_action_color || defaultConfig.primary_action_color,
+                                set: (value) => {
+                                    if (window.elementSdk) {
+                                        window.elementSdk.setConfig({ primary_action_color: value });
+                                    }
+                                }
+                            },
+                            {
+                                get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+                                set: (value) => {
+                                    if (window.elementSdk) {
+                                        window.elementSdk.setConfig({ secondary_action_color: value });
+                                    }
+                                }
+                            }
+                        ],
+                        borderables: [],
+                        fontEditable: {
+                            get: () => config.font_family || defaultConfig.font_family,
+                            set: (value) => {
+                                if (window.elementSdk) {
+                                    window.elementSdk.setConfig({ font_family: value });
+                                }
+                            }
+                        },
+                        fontSizeable: {
+                            get: () => config.font_size || defaultConfig.font_size,
+                            set: (value) => {
+                                if (window.elementSdk) {
+                                    window.elementSdk.setConfig({ font_size: value });
+                                }
+                            }
+                        }
+                    }),
+                    mapToEditPanelValues: (config) => new Map([
+                        ["gallery_title", config.gallery_title || defaultConfig.gallery_title],
+                        ["hero_subtitle", config.hero_subtitle || defaultConfig.hero_subtitle],
+                        ["contact_title", config.contact_title || defaultConfig.contact_title]
+                    ])
+                });
+            }
+        }
+
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', async function() {
+            await initializeDataSDK();
+            await initializeElementSDK();
+            
+            initializeGallery();
+            initializeArtists();
+            initializeEvents();
+            initializeTestimonials();
+            initializeAnimations();
+            initializeInteractions();
+            startCounterAnimation();
+        });
+
+        // Gallery initialization
+        function initializeGallery() {
+            const galleryGrid = document.getElementById('gallery-grid');
+            
+            function renderArtworks(artworksToShow = artworks) {
+                galleryGrid.innerHTML = '';
+                artworksToShow.forEach(artwork => {
+                    const artCard = document.createElement('div');
+                    artCard.className = 'art-card bg-white rounded-lg shadow-lg overflow-hidden fade-in';
+                    artCard.innerHTML = `
+                        <div class="h-64 bg-gradient-to-br from-yellow-200 to-yellow-400 flex items-center justify-center">
+                            <div class="text-center text-gray-700">
+                                <i class="fas fa-palette text-4xl mb-2"></i>
+                                <p class="font-semibold">${artwork.title}</p>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2">${artwork.title}</h3>
+                            <p class="text-gray-600 mb-2">oleh ${artwork.artist}</p>
+                            <p class="text-sm text-gray-500 mb-4">${artwork.philosophy}</p>
+                            <div class="flex justify-between items-center">
+                                <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm">${artwork.category}</span>
+                                <button class="text-yellow-600 hover:text-yellow-700 transition-colors">
+                                    <i class="fas fa-eye"></i> Lihat Detail
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    galleryGrid.appendChild(artCard);
+                });
+            }
+
+            // Filter functionality
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Update active button
+                    filterButtons.forEach(b => {
+                        b.classList.remove('active', 'bg-yellow-600', 'text-white');
+                        b.classList.add('bg-gray-200', 'text-gray-700');
+                    });
+                    this.classList.add('active', 'bg-yellow-600', 'text-white');
+                    this.classList.remove('bg-gray-200', 'text-gray-700');
+
+                    // Filter artworks
+                    const filter = this.dataset.filter;
+                    const filteredArtworks = filter === 'all' ? artworks : artworks.filter(art => art.category === filter);
+                    renderArtworks(filteredArtworks);
+                });
+            });
+
+            renderArtworks();
+        }
+
+        // Artists initialization
+        function initializeArtists() {
+            const artistsGrid = document.getElementById('artists-grid');
+            artists.forEach(artist => {
+                const artistCard = document.createElement('div');
+                artistCard.className = 'bg-white rounded-lg shadow-lg p-6 text-center fade-in';
+                artistCard.innerHTML = `
+                    <div class="w-24 h-24 bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-full mx-auto mb-4 flex items-center justify-center">
+                        <i class="fas fa-user text-2xl text-gray-700"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">${artist.name}</h3>
+                    <p class="text-yellow-600 mb-2">${artist.specialty}</p>
+                    <p class="text-gray-600 mb-4">Pengalaman: ${artist.experience}</p>
+                    <p class="text-sm text-gray-500 italic">"${artist.philosophy}"</p>
+                `;
+                artistsGrid.appendChild(artistCard);
+            });
+        }
+
+        // Events initialization
+        function initializeEvents() {
+            const eventsGrid = document.getElementById('events-grid');
+            events.forEach(event => {
+                const eventCard = document.createElement('div');
+                eventCard.className = 'bg-white rounded-lg shadow-lg p-6 fade-in';
+                eventCard.innerHTML = `
+                    <div class="flex items-start space-x-4">
+                        <div class="bg-yellow-100 p-3 rounded-lg">
+                            <i class="fas fa-calendar-alt text-yellow-600 text-xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-bold mb-2">${event.title}</h3>
+                            <p class="text-yellow-600 mb-2">${event.date}</p>
+                            <p class="text-gray-600">${event.description}</p>
+                            <button class="mt-4 bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg transition-colors">
+                                Daftar Sekarang
+                            </button>
+                        </div>
+                    </div>
+                `;
+                eventsGrid.appendChild(eventCard);
+            });
+        }
+
+        // Testimonials initialization
+        function initializeTestimonials() {
+            const carousel = document.getElementById('testimonials-carousel');
+            let currentTestimonial = 0;
+
+            function renderTestimonial(testimonial) {
+                return `
+                    <div class="testimonial-slide">
+                        <div class="text-2xl mb-4">"${testimonial.message}"</div>
+                        <div class="flex justify-center mb-2">
+                            ${'⭐'.repeat(testimonial.rating)}
+                        </div>
+                        <p class="text-lg opacity-90">- ${testimonial.name}</p>
+                    </div>
+                `;
+            }
+
+            function showTestimonial(index) {
+                carousel.innerHTML = renderTestimonial(testimonials[index]);
+            }
+
+            function nextTestimonial() {
+                currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+                showTestimonial(currentTestimonial);
+            }
+
+            showTestimonial(0);
+            setInterval(nextTestimonial, 5000);
+        }
+
+        function updateTestimonialsDisplay(data) {
+            // Add new testimonials from data to the carousel
+            const newTestimonials = data.filter(item => item.rating && item.message);
+            if (newTestimonials.length > 0) {
+                testimonials.push(...newTestimonials.map(item => ({
+                    name: item.name,
+                    message: item.message,
+                    rating: parseInt(item.rating)
+                })));
+            }
+        }
+
+        // Animations
+        function initializeAnimations() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.fade-in').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // Counter animation
+        function startCounterAnimation() {
+            const counters = document.querySelectorAll('.counter');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const counter = entry.target;
+                        const target = parseInt(counter.dataset.target);
+                        let current = 0;
+                        const increment = target / 100;
+                        
+                        const timer = setInterval(() => {
+                            current += increment;
+                            if (current >= target) {
+                                current = target;
+                                clearInterval(timer);
+                            }
+                            counter.textContent = Math.floor(current);
+                        }, 20);
+                        
+                        observer.unobserve(counter);
+                    }
+                });
+            });
+
+            counters.forEach(counter => observer.observe(counter));
+        }
+
+        // Interactive features
+        function initializeInteractions() {
+            // Dark mode toggle
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            darkModeToggle.addEventListener('click', function() {
+                isDarkMode = !isDarkMode;
+                document.body.classList.toggle('dark-mode', isDarkMode);
+                this.innerHTML = isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            });
+
+            // Language switcher
+            const languageSwitcher = document.getElementById('language-switcher');
+            languageSwitcher.addEventListener('change', function() {
+                currentLanguage = this.value;
+                // Here you would implement language switching logic
+                console.log('Language switched to:', currentLanguage);
+            });
+
+            // Search functionality
+            const searchInput = document.getElementById('search-input');
+            searchInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                // Implement search logic here
+                console.log('Searching for:', query);
+            });
+
+            // Contact form
+            const contactForm = document.getElementById('contact-form');
+            contactForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                if (currentRecordCount >= 999) {
+                    showMessage('Maaf, batas maksimum 999 pesan telah tercapai. Silakan hubungi kami langsung.', 'error');
+                    return;
+                }
+
+                const submitBtn = document.getElementById('submit-btn');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Mengirim...';
+                submitBtn.disabled = true;
+
+                const formData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    message: document.getElementById('message').value,
+                    rating: parseInt(document.getElementById('rating').value),
+                    createdAt: new Date().toISOString()
+                };
+
+                if (window.dataSdk) {
+                    const result = await window.dataSdk.create(formData);
+                    
+                    if (result.isOk) {
+                        showMessage('Terima kasih! Pesan Anda telah terkirim.', 'success');
+                        contactForm.reset();
+                    } else {
+                        showMessage('Terjadi kesalahan. Silakan coba lagi.', 'error');
+                    }
+                } else {
+                    showMessage('Pesan berhasil dikirim!', 'success');
+                    contactForm.reset();
+                }
+
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            });
+
+            // Virtual tour modal
+            const virtualTourBtn = document.getElementById('virtual-tour-btn');
+            const virtualTourModal = document.getElementById('virtual-tour-modal');
+            const closeModal = document.getElementById('close-modal');
+            const closeTour = document.getElementById('close-tour');
+
+            virtualTourBtn.addEventListener('click', function() {
+                virtualTourModal.classList.add('active');
+            });
+
+            [closeModal, closeTour].forEach(btn => {
+                btn.addEventListener('click', function() {
+                    virtualTourModal.classList.remove('active');
+                });
+            });
+
+            // Chatbot
+            const chatbotToggle = document.getElementById('chatbot-toggle');
+            const chatbotWindow = document.getElementById('chatbot-window');
+            const chatInput = document.getElementById('chat-input');
+            const chatSend = document.getElementById('chat-send');
+            const chatMessages = document.getElementById('chat-messages');
+
+            chatbotToggle.addEventListener('click', function() {
+                chatbotWindow.classList.toggle('hidden');
+            });
+
+            function addChatMessage(message, isUser = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `p-3 rounded-lg mb-2 ${isUser ? 'bg-yellow-100 ml-8' : 'bg-gray-100'}`;
+                messageDiv.innerHTML = `<p class="text-sm">${message}</p>`;
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function sendChatMessage() {
+                const message = chatInput.value.trim();
+                if (message) {
+                    addChatMessage(message, true);
+                    chatInput.value = '';
+                    
+                    // Simple chatbot responses
+                    setTimeout(() => {
+                        const responses = [
+                            "Terima kasih atas pertanyaan Anda! Galeri kami buka setiap hari dari jam 09:00-18:00.",
+                            "Kami memiliki lebih dari 150 karya seni dari 25 seniman terkemuka.",
+                            "Untuk informasi tiket dan reservasi, silakan hubungi kami di +62 21 1234 5678.",
+                            "Tur virtual 360° tersedia gratis untuk semua pengunjung!"
+                        ];
+                        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                        addChatMessage(randomResponse);
+                    }, 1000);
+                }
+            }
+
+            chatSend.addEventListener('click', sendChatMessage);
+            chatInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendChatMessage();
+                }
+            });
+
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+
+        // Utility function to show messages
+        function showMessage(message, type = 'info') {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `fixed top-20 right-6 p-4 rounded-lg shadow-lg z-50 ${
+                type === 'success' ? 'bg-green-500 text-white' : 
+                type === 'error' ? 'bg-red-500 text-white' : 
+                'bg-blue-500 text-white'
+            }`;
+            messageDiv.textContent = message;
+            
+            document.body.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99e303fe859db5ee',t:'MTc2MzA4NjY3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
